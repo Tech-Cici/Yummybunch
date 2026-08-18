@@ -1,0 +1,53 @@
+# ---------------------------------------------------------------------------
+# Secrets — never commit these
+# ---------------------------------------------------------------------------
+# Holds the Gmail app password and DB credentials.
+# Commit application.properties.example instead and keep the real file local.
+Yummybunch/src/main/resources/application.properties
+application-local.properties
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Runtime data — user uploads, not source
+# ---------------------------------------------------------------------------
+Yummybunch/uploads/
+uploads/
+
+# ---------------------------------------------------------------------------
+# Java / Maven build output
+# ---------------------------------------------------------------------------
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+
+# ---------------------------------------------------------------------------
+# Node / Next.js
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+out/
+build/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/*
+!.vscode/settings.json
+.classpath
+.project
+.settings/

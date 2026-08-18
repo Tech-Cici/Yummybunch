@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Brand palette lives here and nowhere else. Components use semantic tokens
+   * (primary, muted-foreground, card, border) so both themes stay consistent
+   * and the brand colour can change in one place.
+   *
+   * Yummybunch orange ≈ #ea580c → hsl(21 90% 48%)
+   */
+  :root {
+    color-scheme: light;
+
+    --background: 0 0% 100%;
+    --foreground: 20 14% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 11%;
+
+    --primary: 21 90% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 22% 96%;
+    --secondary-foreground: 20 14% 16%;
+
+    --muted: 24 20% 96%;
+    --muted-foreground: 25 8% 45%;
+
+    --accent: 26 100% 95%;
+    --accent-foreground: 21 85% 32%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 60% 34%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 30 40% 12%;
+
+    --border: 24 16% 90%;
+    --input: 24 16% 88%;
+    --ring: 21 90% 48%;
+
+    /* Warm wash used behind heroes and empty states */
+    --brand-wash-from: 26 100% 96%;
+    --brand-wash-to: 0 0% 100%;
+
+    --radius: 0.65rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --background: 20 14% 7%;
+    --foreground: 30 20% 96%;
+
+    --card: 20 13% 11%;
+    --card-foreground: 30 20% 96%;
+
+    --popover: 20 13% 11%;
+    --popover-foreground: 30 20% 96%;
+
+    /* Lifted slightly so the brand still reads as vivid on a dark surface */
+    --primary: 22 92% 56%;
+    --primary-foreground: 20 14% 7%;
+
+    --secondary: 20 10% 16%;
+    --secondary-foreground: 30 20% 96%;
+
+    --muted: 20 10% 15%;
+    --muted-foreground: 25 10% 64%;
+
+    --accent: 20 12% 18%;
+    --accent-foreground: 26 95% 70%;
+
+    --destructive: 0 65% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 55% 45%;
+    --success-foreground: 20 14% 7%;
+
+    --warning: 38 92% 58%;
+    --warning-foreground: 30 40% 10%;
+
+    --border: 20 9% 20%;
+    --input: 20 9% 22%;
+    --ring: 22 92% 56%;
+
+    --brand-wash-from: 20 20% 12%;
+    --brand-wash-to: 20 14% 7%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Set by next/font in layout.tsx; the stack is the fallback. */
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * One visible focus ring everywhere, keyboard-only. Without this, tabbing
+   * through the app gave no reliable indication of position.
+   */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Anchored scrolling clears the sticky header */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Warm gradient used by the hero and empty states, theme-aware */
+  .bg-brand-wash {
+    background-image: linear-gradient(
+      to bottom,
+      hsl(var(--brand-wash-from)),
+      hsl(var(--brand-wash-to))
+    );
+  }
+
+  /* Skip link: off-screen until focused */
+  .skip-link {
+    @apply absolute left-4 z-50 -translate-y-20 rounded-md bg-primary px-4 py-2
+           text-sm font-medium text-primary-foreground transition-transform;
+  }
+  .skip-link:focus {
+    @apply translate-y-4;
+  }
+}
