@@ -64,6 +64,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/restaurants/*/menu").permitAll()
                 .requestMatchers("/uploads/**", "/error").permitAll()
 
+                // API documentation. springdoc is on the classpath, so without
+                // these rules anyRequest().authenticated() returned 401 for it.
+                // Turn the docs off entirely with DOCS_ENABLED=false.
+                .requestMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**").permitAll()
+
                 // ---- Owner-only management. Declared before the generic /api/restaurants/**
                 //      rules above would otherwise let a GET through.
                 .requestMatchers("/api/my-restaurant/**").hasRole("RESTAURANT")

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -39,6 +40,27 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleOther(Exception e) {
+        /*
+         * Spring signals ordinary HTTP conditions with exceptions that already
+         * carry the right status: an unknown path is NoResourceFoundException
+         * (404), a wrong verb is HttpRequestMethodNotSupportedException (405),
+         * and so on. All of them implement ErrorResponse.
+         *
+         * Catching Exception without this check turned every one of them into a
+         * 500 — so a simple typo in a URL looked like a server crash.
+         */
+        if (e instanceof ErrorResponse er) {
+            HttpStatus status = HttpStatus.valueOf(er.getStatusCode().value());
+            return ResponseEntity.status(status).body(Map.of("message", switch (status) {
+                case NOT_FOUND -> "No such endpoint.";
+                case METHOD_NOT_ALLOWED -> "That method is not allowed on this endpoint.";
+                case UNSUPPORTED_MEDIA_TYPE -> "Unsupported content type.";
+                case BAD_REQUEST -> "The request could not be read.";
+                default -> status.getReasonPhrase();
+            }));
+        }
+
+        // Genuinely unexpected: log the detail, tell the client nothing specific.
         log.error("Unhandled error", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("message", "Something went wrong. Please try again."));
