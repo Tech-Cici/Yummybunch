@@ -117,6 +117,13 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Render offers managed PostgreSQL, not MySQL. Both drivers ship so the
+		     same jar runs against either; Spring infers which from the JDBC URL. -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<!-- JWT -->
 		<dependency>

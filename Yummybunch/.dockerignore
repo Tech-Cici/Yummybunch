@@ -1,0 +1,8 @@
+target/
+uploads/
+.git/
+.gitignore
+*.md
+.mvn/wrapper/maven-wrapper.jar
+# Never let local secrets into the image; prod reads env vars instead.
+src/main/resources/application.properties

@@ -1,0 +1,60 @@
+# ===========================================================================
+# Render blueprint. Create from the dashboard: New > Blueprint > pick this repo.
+#
+# Secrets are deliberately NOT in this file — anything marked sync:false must be
+# typed into the Render dashboard. Never commit a credential.
+# ===========================================================================
+services:
+  - type: web
+    name: yummybunch-api
+    runtime: docker
+    dockerfilePath: ./Yummybunch/Dockerfile
+    dockerContext: ./Yummybunch
+    region: frankfurt          # pick the region closest to your users
+    plan: free                 # see the caveats in DEPLOY.md before relying on this
+    healthCheckPath: /api/restaurants
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # Wired automatically from the database below. Host/port/name are used
+      # separately because Render's connectionString is a postgresql:// URL,
+      # which Spring cannot parse — it needs a jdbc: URL.
+      - key: DB_HOST
+        fromDatabase:
+          name: yummybunch-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: yummybunch-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: yummybunch-db
+          property: database
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: yummybunch-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: yummybunch-db
+          property: password
+
+      # Generated once by Render and kept stable. Changing it signs everyone out.
+      - key: JWT_SECRET
+        generateValue: true
+
+      # --- you must fill these in the dashboard ---
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+
+databases:
+  - name: yummybunch-db
+    databaseName: yummybunch
+    plan: free
+    region: frankfurt
