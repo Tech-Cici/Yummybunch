@@ -31,9 +31,15 @@ RUN chown appuser:appuser app.jar
 USER appuser
 EXPOSE 8080
 
+# Tuned for a 512 MB container. MaxRAMPercentage=75 asked for a 384 MB heap,
+# which — once metaspace, thread stacks and native memory are added — exceeded
+# the limit and got the JVM SIGKILLed mid-request with no log output.
+#   SerialGC        : G1's bookkeeping is wasted on a single small heap
+#   TieredStopAtLevel=1 : far quicker warm-up on a CPU-starved instance
+#   Xss512k         : 200 Tomcat threads at 1 MB of stack each is not affordable
 ENV SPRING_PROFILES_ACTIVE=prod \
     UPLOAD_DIR=/data/uploads \
-    JAVA_OPTS="-XX:MaxRAMPercentage=75"
+    JAVA_OPTS="-XX:MaxRAMPercentage=50 -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k"
 
 # Hosts inject $PORT; Spring reads it via server.port in the prod profile.
 ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar app.jar"]
