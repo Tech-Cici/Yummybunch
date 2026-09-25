@@ -37,5 +37,8 @@ services:
         sync: false
       - key: MAIL_PASSWORD
         sync: false
+      # Brevo API key (Render's free plan blocks SMTP). MAIL_USERNAME is the sender.
+      - key: BREVO_API_KEY
+        sync: false
       - key: CORS_ORIGINS
         sync: false
