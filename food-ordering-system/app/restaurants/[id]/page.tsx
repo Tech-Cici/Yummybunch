@@ -11,8 +11,8 @@ import { BackButton } from '@/components/app/back-button';
 async function load(id: string): Promise<{ restaurant: Restaurant; menu: MenuItem[] } | null> {
   try {
     const [rRes, mRes] = await Promise.all([
-      fetch(`${API_URL}/api/restaurants/${id}`, { cache: 'no-store' }),
-      fetch(`${API_URL}/api/restaurants/${id}/menu`, { cache: 'no-store' }),
+      fetch(`${API_URL}/api/restaurants/${id}`, { cache: 'no-store', signal: AbortSignal.timeout(8000) }),
+      fetch(`${API_URL}/api/restaurants/${id}/menu`, { cache: 'no-store', signal: AbortSignal.timeout(8000) }),
     ]);
     if (!rRes.ok) return null;
     return {

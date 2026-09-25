@@ -10,7 +10,7 @@ import { API_URL, Restaurant } from '@/lib/api';
  */
 async function loadRestaurants(): Promise<Restaurant[]> {
   try {
-    const res = await fetch(`${API_URL}/api/restaurants`, { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/api/restaurants`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
     if (!res.ok) return [];
     return (await res.json()) as Restaurant[];
   } catch {

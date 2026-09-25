@@ -17,29 +17,16 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
 
-      # Wired automatically from the database below. Host/port/name are used
-      # separately because Render's connectionString is a postgresql:// URL,
-      # which Spring cannot parse — it needs a jdbc: URL.
-      - key: DB_HOST
-        fromDatabase:
-          name: yummybunch-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: yummybunch-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: yummybunch-db
-          property: database
+      # Database lives on Neon (Render's free Postgres expires after 30 days).
+      # Set these in the dashboard. DATABASE_URL must be a jdbc: URL, e.g.
+      #   jdbc:postgresql://ep-xxxx.eu-central-1.aws.neon.tech/neondb?sslmode=require
+      # Use Neon's DIRECT host (no '-pooler' in the name).
+      - key: DATABASE_URL
+        sync: false
       - key: DATABASE_USERNAME
-        fromDatabase:
-          name: yummybunch-db
-          property: user
+        sync: false
       - key: DATABASE_PASSWORD
-        fromDatabase:
-          name: yummybunch-db
-          property: password
+        sync: false
 
       # Generated once by Render and kept stable. Changing it signs everyone out.
       - key: JWT_SECRET
@@ -52,9 +39,3 @@ services:
         sync: false
       - key: CORS_ORIGINS
         sync: false
-
-databases:
-  - name: yummybunch-db
-    databaseName: yummybunch
-    plan: free
-    region: frankfurt
