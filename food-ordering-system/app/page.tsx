@@ -154,11 +154,18 @@ export default async function HomePage() {
               Put your menu online with photos and prices, switch ordering on when you open, and manage incoming orders
               from one simple queue.
             </p>
-            <Link href="/signup?role=restaurant" className="mt-8 inline-block">
-              <Button size="lg" className="gap-2 bg-saffron text-[#2b1a12] shadow-none hover:bg-saffron/90">
-                List your restaurant <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/signup?role=restaurant">
+                <Button size="lg" className="gap-2 bg-saffron text-[#2b1a12] shadow-none hover:bg-saffron/90">
+                  List your restaurant <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/join">
+                <Button size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
+                  How joining works
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

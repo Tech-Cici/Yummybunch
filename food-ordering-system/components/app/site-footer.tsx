@@ -28,7 +28,8 @@ export function SiteFooter() {
         <nav aria-label="For restaurants" className="text-sm">
           <p className="font-bold text-saffron">Cook</p>
           <ul className="mt-3 space-y-2 text-[#f6e9dc]/80">
-            <li><Link href="/#for-restaurants" className="rounded hover:text-white">Why list with us</Link></li>
+            <li><Link href="/join" className="rounded hover:text-white">Join us</Link></li>
+            <li><Link href="/join#talk-to-us" className="rounded hover:text-white">Contact us</Link></li>
             <li><Link href="/signup?role=restaurant" className="rounded hover:text-white">List your restaurant</Link></li>
             <li><Link href="/dashboard" className="rounded hover:text-white">Restaurant dashboard</Link></li>
             <li><Link href="/login" className="rounded hover:text-white">Sign in</Link></li>

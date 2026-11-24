@@ -50,7 +50,7 @@ export function SiteHeader() {
     ? [{ href: '/restaurants', label: 'Browse as a customer', icon: Store }]
     : [
         { href: '/#how-it-works', label: 'How it works', icon: HelpCircle },
-        ...(user ? [] : [{ href: '/#for-restaurants', label: 'For restaurants', icon: ChefHat }]),
+        ...(user ? [] : [{ href: '/join', label: 'Join us', icon: ChefHat }]),
       ];
 
   /** /restaurants/12 keeps "Restaurants" lit; /dashboard/menu lights "Menu" but not "Order queue". */
