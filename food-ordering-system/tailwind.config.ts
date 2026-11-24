@@ -49,6 +49,8 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--warning))',
   				foreground: 'hsl(var(--warning-foreground))'
   			},
+  			saffron: 'hsl(var(--saffron))',
+  			herb: 'hsl(var(--herb))',
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

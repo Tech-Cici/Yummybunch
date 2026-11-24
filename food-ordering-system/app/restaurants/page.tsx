@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { api, ApiError, imageUrl, Restaurant } from '@/lib/api';
+import { api, ApiError, Restaurant } from '@/lib/api';
+import { RestaurantCard } from '@/components/app/restaurant-card';
+import { foodPhoto } from '@/lib/food-photos';
 
 export default function BrowsePage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -16,6 +18,12 @@ export default function BrowsePage() {
   const [cuisine, setCuisine] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Links like /restaurants?q=pizza (the "What are you craving?" circles) start with a search.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('q');
+    if (q) setQuery(q);
+  }, []);
 
   // Load the cuisine chips once.
   useEffect(() => {
@@ -57,57 +65,62 @@ export default function BrowsePage() {
   }, [loading, restaurants.length]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Restaurants</h1>
-      <p className="mt-1 text-muted-foreground">Browse menus and prices. No account needed to look around.</p>
-
-      <div className="mt-6 flex flex-col gap-3">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search by name, cuisine or area…"
-            className="pl-9"
-            aria-label="Search restaurants"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-
-        {cuisines.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={cuisine === null ? 'default' : 'outline'}
-              size="sm"
-              className={cuisine === null ? 'bg-primary hover:bg-primary/90' : ''}
-              onClick={() => setCuisine(null)}
-            >
-              All
-            </Button>
-            {cuisines.map(c => (
-              <Button
-                key={c}
-                variant={cuisine === c ? 'default' : 'outline'}
-                size="sm"
-                className={cuisine === c ? 'bg-primary hover:bg-primary/90' : ''}
-                onClick={() => setCuisine(cuisine === c ? null : c)}
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <section className="relative overflow-hidden rounded-[2rem] bg-[#2b1a12] px-6 py-12 text-white shadow-xl sm:px-12">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={foodPhoto('spread')} alt="" className="absolute inset-0 h-full w-full object-cover opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#2b1a12] via-[#2b1a12]/75 to-[#2b1a12]/20" />
+        <div className="relative max-w-xl">
+          <p className="text-sm font-bold uppercase tracking-widest text-saffron">Restaurants near you</p>
+          <h1 className="font-display mt-2 text-4xl font-semibold sm:text-5xl">What&apos;s cooking today?</h1>
+          <p className="mt-3 text-white/80">Browse menus and prices. No account needed to look around.</p>
+          <div className="relative mt-6">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search a dish, cuisine or area…"
+              className="h-14 rounded-full border-0 pl-12 pr-12 text-base text-foreground shadow-lg"
+              aria-label="Search restaurants"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
               >
-                {c}
-              </Button>
-            ))}
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
 
-      <h2 className="mt-8 text-sm font-medium text-muted-foreground">{heading}</h2>
+      {cuisines.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button
+            variant={cuisine === null ? 'default' : 'outline'}
+            size="sm"
+            className={cuisine === null ? '' : 'bg-card'}
+            onClick={() => setCuisine(null)}
+          >
+            All kitchens
+          </Button>
+          {cuisines.map(c => (
+            <Button
+              key={c}
+              variant={cuisine === c ? 'default' : 'outline'}
+              size="sm"
+              className={cuisine === c ? '' : 'bg-card'}
+              onClick={() => setCuisine(cuisine === c ? null : c)}
+            >
+              {c}
+            </Button>
+          ))}
+        </div>
+      )}
+
+      <h2 className="mt-8 text-sm font-bold text-muted-foreground">{heading}</h2>
 
       {error && (
         <Card className="mt-4 border-destructive/30 bg-destructive/10">
@@ -116,10 +129,10 @@ export default function BrowsePage() {
       )}
 
       {loading ? (
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2, 3, 4, 5].map(i => (
-            <Card key={i}>
-              <Skeleton className="h-40 w-full rounded-t-lg rounded-b-none" />
+            <Card key={i} className="overflow-hidden rounded-3xl">
+              <Skeleton className="aspect-[4/3] w-full rounded-none" />
               <CardContent className="space-y-2 p-5">
                 <Skeleton className="h-4 w-2/3" />
                 <Skeleton className="h-3 w-1/3" />
@@ -128,9 +141,9 @@ export default function BrowsePage() {
           ))}
         </div>
       ) : restaurants.length === 0 && !error ? (
-        <Card className="mt-4 border-dashed">
+        <Card className="mt-4 rounded-3xl border-dashed bg-card/60">
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Store className="h-10 w-10 text-muted-foreground/40" />
+            <Store className="h-10 w-10 text-primary/40" />
             <p className="text-sm text-muted-foreground">
               {query || cuisine
                 ? 'Nothing matched that search. Try a different term.'
@@ -150,40 +163,10 @@ export default function BrowsePage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {restaurants.map(r => {
-            const cover = imageUrl(r.coverImageUrl);
-            return (
-              <Link key={r.id} href={`/restaurants/${r.id}`} className="group">
-                <Card className="h-full overflow-hidden transition group-hover:border-primary/40 group-hover:shadow-md">
-                  <div className="relative h-40 bg-gradient-to-br from-primary/15 to-accent">
-                    {cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={cover} alt={r.name} className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-primary/40">
-                        <Store className="h-10 w-10" />
-                      </div>
-                    )}
-                    {!r.acceptingOrders && (
-                      <span className="absolute right-3 top-3 rounded bg-foreground/80 px-2 py-1 text-xs font-medium text-primary-foreground">
-                        Closed
-                      </span>
-                    )}
-                  </div>
-                  <CardContent className="p-5">
-                    <h3 className="font-semibold group-hover:text-primary">{r.name}</h3>
-                    {r.cuisine && <p className="mt-1 text-sm text-primary">{r.cuisine}</p>}
-                    {r.address && <p className="mt-2 line-clamp-1 text-sm text-muted-foreground">{r.address}</p>}
-                    <p className="mt-3 text-xs text-muted-foreground">
-                      {r.menuItemCount} item{r.menuItemCount === 1 ? '' : 's'}
-                      {r.openingTime && r.closingTime ? ` · ${r.openingTime}–${r.closingTime}` : ''}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {restaurants.map(r => (
+            <RestaurantCard key={r.id} r={r} />
+          ))}
         </div>
       )}
     </div>

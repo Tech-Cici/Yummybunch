@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Fraunces, Nunito } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -8,7 +8,9 @@ import { SiteFooter } from '@/components/app/site-footer';
 import { Toaster } from '@/components/ui/sonner';
 
 // Exposed as a CSS variable so globals.css can own the font stack.
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const nunito = Nunito({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+// Warm serif for headings and the wordmark (.font-display in globals.css)
+const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-display', display: 'swap', axes: ['SOFT', 'opsz'] });
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     // suppressHydrationWarning: next-themes sets the class on <html> before
     // React hydrates, which would otherwise be reported as a mismatch.
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" suppressHydrationWarning className={`${nunito.variable} ${fraunces.variable}`}>
       <body className="min-h-screen antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Providers>

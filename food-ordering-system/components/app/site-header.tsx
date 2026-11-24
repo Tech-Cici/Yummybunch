@@ -57,7 +57,7 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4">
         {/* ---- mobile burger ---- */}
         <Sheet open={open} onOpenChange={setOpen}>
@@ -69,8 +69,8 @@ export function SiteHeader() {
 
           <SheetContent side="left" className="w-[17rem] p-0">
             <SheetHeader className="border-b px-5 py-4 text-left">
-              <SheetTitle className="flex items-center gap-2 text-primary">
-                <UtensilsCrossed className="h-5 w-5" /> Yummybunch
+              <SheetTitle className="font-display flex items-center gap-2 text-xl">
+                <UtensilsCrossed className="h-5 w-5 text-primary" /> Yummy<span className="-ml-2 text-primary">bunch</span>
               </SheetTitle>
             </SheetHeader>
 
@@ -127,10 +127,12 @@ export function SiteHeader() {
         {/* ---- wordmark ---- */}
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 rounded-md text-lg font-bold text-primary sm:text-xl"
+          className="flex shrink-0 items-center gap-2 rounded-full text-lg sm:text-xl"
         >
-          <UtensilsCrossed className="h-6 w-6" />
-          <span>Yummybunch</span>
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+            <UtensilsCrossed className="h-5 w-5" />
+          </span>
+          <span className="font-display font-semibold text-foreground">Yummy<span className="text-primary">bunch</span></span>
         </Link>
 
         {/* ---- desktop nav ---- */}
@@ -141,10 +143,10 @@ export function SiteHeader() {
               href={link.href}
               aria-current={isActive(link.href) ? 'page' : undefined}
               className={cn(
-                'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'rounded-full px-4 py-2 text-sm font-bold transition-colors',
                 isActive(link.href)
                   ? 'bg-accent text-accent-foreground'
-                  : 'text-foreground/70 hover:bg-muted hover:text-foreground'
+                  : 'text-foreground/70 hover:bg-accent/60 hover:text-foreground'
               )}
             >
               {link.label}

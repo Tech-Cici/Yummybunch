@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { UtensilsCrossed } from 'lucide-react';
+import { AuthSplit } from '@/components/app/auth-split';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -51,15 +52,18 @@ function LoginForm() {
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 py-16">
-      <div className="text-center">
-        <UtensilsCrossed className="mx-auto h-8 w-8 text-primary" />
-        <h1 className="mt-3 text-2xl font-bold">Welcome back</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Sign in to order or manage your restaurant.</p>
+    <AuthSplit photo="brunch" quote={{ title: 'Your table is waiting.', body: 'Sign in to pick up where you left off: your basket, your orders, your favourite kitchens.' }}>
+    <div className="mx-auto w-full max-w-md">
+      <div>
+        <span className="inline-grid h-12 w-12 place-items-center rounded-2xl bg-accent text-primary">
+          <UtensilsCrossed className="h-6 w-6" />
+        </span>
+        <h1 className="font-display mt-5 text-4xl font-semibold">Welcome back</h1>
+        <p className="mt-2 text-muted-foreground">Sign in to order or manage your restaurant.</p>
       </div>
 
-      <Card className="mt-8">
-        <CardContent className="pt-6">
+      <Card className="mt-8 rounded-3xl">
+        <CardContent className="p-6 sm:p-8">
           <form onSubmit={submit} className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
@@ -78,7 +82,7 @@ function LoginForm() {
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <Button type="submit" disabled={submitting} className="w-full bg-primary hover:bg-primary/90">
+            <Button type="submit" size="lg" disabled={submitting} className="w-full">
               {submitting ? 'Signing in…' : 'Sign in'}
             </Button>
           </form>
@@ -90,6 +94,7 @@ function LoginForm() {
         </CardContent>
       </Card>
     </div>
+    </AuthSplit>
   );
 }
 

@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { Clock, MapPin, Phone, UtensilsCrossed } from 'lucide-react';
+import { Clock, MapPin, Phone } from 'lucide-react';
 import { API_URL, imageUrl, MenuItem, Restaurant } from '@/lib/api';
 import { RestaurantMenu } from '@/components/app/restaurant-menu';
 import { BackButton } from '@/components/app/back-button';
+import { FoodPhotoImg } from '@/components/app/food-photo';
 
 /**
  * Server component: the restaurant and its menu are fetched here so they appear
@@ -48,49 +49,44 @@ export default async function RestaurantPage({ params }: { params: { id: string 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <BackButton fallback="/restaurants" label="All restaurants" />
-      <div className="overflow-hidden rounded-xl border">
-        <div className="relative h-48 bg-gradient-to-br from-primary/25 to-accent sm:h-60">
-          {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={cover} alt={restaurant.name} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full items-center justify-center text-primary/40">
-              <UtensilsCrossed className="h-14 w-14" />
-            </div>
-          )}
-        </div>
-        <div className="p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="overflow-hidden rounded-[2rem] border bg-card shadow-sm shadow-orange-900/5">
+        <div className="relative h-56 sm:h-72">
+          <FoodPhotoImg src={cover} seed={restaurant.id} alt={restaurant.name} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-6 sm:p-8">
             <div>
-              <h1 className="text-2xl font-bold">{restaurant.name}</h1>
-              {restaurant.cuisine && <p className="mt-1 text-primary">{restaurant.cuisine}</p>}
+              {restaurant.cuisine && (
+                <span className="rounded-full bg-card/95 px-3 py-1 text-xs font-bold text-accent-foreground">{restaurant.cuisine}</span>
+              )}
+              <h1 className="font-display mt-3 text-4xl font-semibold text-white drop-shadow sm:text-5xl">{restaurant.name}</h1>
             </div>
             <span
-              className={`rounded-full px-3 py-1 text-xs font-medium ${
-                restaurant.acceptingOrders ? 'bg-success/15 text-success' : 'bg-muted text-muted-foreground'
+              className={`rounded-full px-3.5 py-1.5 text-xs font-bold shadow ${
+                restaurant.acceptingOrders ? 'bg-herb text-white' : 'bg-card/90 text-muted-foreground'
               }`}
             >
-              {restaurant.acceptingOrders ? 'Accepting orders' : 'Not accepting orders'}
+              {restaurant.acceptingOrders ? 'Taking orders now' : 'Not taking orders'}
             </span>
           </div>
-
+        </div>
+        <div className="p-6 sm:p-8">
           {restaurant.description && (
-            <p className="mt-3 text-sm text-muted-foreground">{restaurant.description}</p>
+            <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">{restaurant.description}</p>
           )}
 
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+          <div className={`flex flex-wrap gap-3 text-sm ${restaurant.description ? 'mt-5' : ''}`}>
             {restaurant.address && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2 rounded-full bg-secondary px-3.5 py-2">
                 <MapPin className="h-4 w-4 text-primary" />{restaurant.address}
               </span>
             )}
             {restaurant.phone && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2 rounded-full bg-secondary px-3.5 py-2">
                 <Phone className="h-4 w-4 text-primary" />{restaurant.phone}
               </span>
             )}
             {restaurant.openingTime && restaurant.closingTime && (
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-2 rounded-full bg-secondary px-3.5 py-2">
                 <Clock className="h-4 w-4 text-primary" />
                 {restaurant.openingTime}–{restaurant.closingTime}
               </span>

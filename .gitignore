@@ -51,3 +51,5 @@ Thumbs.db
 .classpath
 .project
 .settings/
+.vercel
+.env*

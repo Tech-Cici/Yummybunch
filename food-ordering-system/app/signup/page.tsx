@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api, ApiError, Role } from '@/lib/api';
+import { AuthSplit } from '@/components/app/auth-split';
 
 function SignupForm() {
   const router = useRouter();
@@ -68,11 +69,21 @@ function SignupForm() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-12">
-      <div className="text-center">
-        <UtensilsCrossed className="mx-auto h-8 w-8 text-primary" />
-        <h1 className="mt-3 text-2xl font-bold">Create your account</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+    <AuthSplit
+      photo={role === 'RESTAURANT' ? 'dining' : 'spread'}
+      quote={
+        role === 'RESTAURANT'
+          ? { title: 'Bring your kitchen online.', body: 'List your dishes with photos and prices and take orders from people nearby.' }
+          : { title: 'Pull up a chair.', body: 'Create an account to order from local kitchens and follow every order to your door.' }
+      }
+    >
+    <div className="mx-auto w-full max-w-lg">
+      <div>
+        <span className="inline-grid h-12 w-12 place-items-center rounded-2xl bg-accent text-primary">
+          <UtensilsCrossed className="h-6 w-6" />
+        </span>
+        <h1 className="font-display mt-5 text-4xl font-semibold">Create your account</h1>
+        <p className="mt-2 text-muted-foreground">
           We&apos;ll email you a 6-digit code to confirm your address.
         </p>
       </div>
@@ -87,21 +98,21 @@ function SignupForm() {
             key={opt.value}
             type="button"
             onClick={() => setRole(opt.value)}
-            className={`rounded-lg border p-4 text-left transition ${
+            className={`rounded-2xl border bg-card p-4 text-left transition ${
               role === opt.value
-                ? 'border-primary bg-accent ring-1 ring-primary'
-                : 'hover:border-border'
+                ? 'border-primary bg-accent ring-2 ring-primary/30'
+                : 'hover:border-primary/40'
             }`}
           >
             <opt.icon className={`h-5 w-5 ${role === opt.value ? 'text-primary' : 'text-muted-foreground'}`} />
-            <p className="mt-2 text-sm font-medium">{opt.title}</p>
+            <p className="mt-2 text-sm font-bold">{opt.title}</p>
             <p className="text-xs text-muted-foreground">{opt.sub}</p>
           </button>
         ))}
       </div>
 
-      <Card className="mt-6">
-        <CardContent className="pt-6">
+      <Card className="mt-6 rounded-3xl">
+        <CardContent className="p-6 sm:p-8">
           <form onSubmit={submit} className="space-y-4">
             <div>
               <Label htmlFor="name">{role === 'RESTAURANT' ? 'Your name' : 'Full name'}</Label>
@@ -149,7 +160,7 @@ function SignupForm() {
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <Button type="submit" disabled={submitting} className="w-full bg-primary hover:bg-primary/90">
+            <Button type="submit" size="lg" disabled={submitting} className="w-full">
               {submitting ? 'Creating account…' : 'Create account'}
             </Button>
           </form>
@@ -161,6 +172,7 @@ function SignupForm() {
         </CardContent>
       </Card>
     </div>
+    </AuthSplit>
   );
 }
 

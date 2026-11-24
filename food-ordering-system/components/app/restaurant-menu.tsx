@@ -2,12 +2,13 @@
 
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, ShoppingBag, UtensilsCrossed } from 'lucide-react';
+import { Plus, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { imageUrl, MenuItem, money, Restaurant } from '@/lib/api';
 import { useAuth, useCart } from '@/app/providers';
+import { FoodPhotoImg } from './food-photo';
 
 /**
  * Only the interactive half of the restaurant page. The restaurant details and
@@ -51,10 +52,10 @@ export function RestaurantMenu({
   return (
     <>
       <div className="mt-10">
-        <h2 className="text-xl font-semibold">Menu</h2>
+        <h2 className="font-display text-3xl font-semibold">On the menu</h2>
 
         {menu.length === 0 ? (
-          <Card className="mt-4 border-dashed">
+          <Card className="mt-4 rounded-3xl border-dashed bg-card/60">
             <CardContent className="py-14 text-center text-sm text-muted-foreground">
               This restaurant hasn&apos;t added any menu items yet.
             </CardContent>
@@ -62,25 +63,23 @@ export function RestaurantMenu({
         ) : (
           sections.map(([section, items]) => (
             <section key={section} className="mt-8">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{section}</h3>
-              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              <h3 className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-primary">
+                {section}
+                <span className="h-px flex-1 bg-border" />
+              </h3>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {items.map(item => {
                   const pic = imageUrl(item.imageUrl);
                   return (
-                    <Card key={item.id} className="overflow-hidden">
+                    <Card key={item.id} className="overflow-hidden rounded-3xl transition hover:shadow-md hover:shadow-orange-900/10">
                       <CardContent className="flex gap-4 p-4">
-                        {pic ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={pic} alt={item.name} className="h-20 w-20 shrink-0 rounded-md object-cover" />
-                        ) : (
-                          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-md bg-accent text-primary/40">
-                            <UtensilsCrossed className="h-6 w-6" />
-                          </div>
-                        )}
+                        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl">
+                          <FoodPhotoImg src={pic} seed={item.id} alt={item.name} />
+                        </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-medium">{item.name}</h4>
-                            <span className="shrink-0 font-semibold">{money(item.price)}</span>
+                            <h4 className="font-display text-lg font-semibold leading-snug">{item.name}</h4>
+                            <span className="shrink-0 rounded-full bg-accent px-2.5 py-0.5 text-sm font-bold text-accent-foreground">{money(item.price)}</span>
                           </div>
                           {item.description && (
                             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
@@ -91,12 +90,8 @@ export function RestaurantMenu({
                             ) : !restaurant.acceptingOrders ? (
                               <Button size="sm" variant="outline" disabled>Closed</Button>
                             ) : (
-                              <Button
-                                size="sm"
-                                className="gap-1 bg-primary hover:bg-primary/90"
-                                onClick={() => addToCart(item)}
-                              >
-                                <Plus className="h-3 w-3" /> Add
+                              <Button size="sm" className="gap-1" onClick={() => addToCart(item)}>
+                                <Plus className="h-3 w-3" /> Add to basket
                               </Button>
                             )}
                           </div>
@@ -113,7 +108,7 @@ export function RestaurantMenu({
 
       {cart.count > 0 && cart.restaurantId === restaurant.id && (
         <div className="sticky bottom-4 mt-10">
-          <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 rounded-xl border bg-card p-4 shadow-lg">
+          <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 rounded-full border bg-card py-3 pl-6 pr-3 shadow-xl shadow-orange-900/15">
             <div className="flex items-center gap-3">
               <ShoppingBag className="h-5 w-5 text-primary" />
               <div className="text-sm">
@@ -121,9 +116,7 @@ export function RestaurantMenu({
                 <p className="text-muted-foreground">{money(cart.subtotal)}</p>
               </div>
             </div>
-            <Button className="bg-primary hover:bg-primary/90" onClick={() => router.push('/checkout')}>
-              Checkout
-            </Button>
+            <Button onClick={() => router.push('/checkout')}>Go to checkout</Button>
           </div>
         </div>
       )}
