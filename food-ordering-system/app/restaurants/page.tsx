@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Store, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,7 @@ import { api, ApiError, Restaurant } from '@/lib/api';
 import { RestaurantCard } from '@/components/app/restaurant-card';
 import { foodPhoto } from '@/lib/food-photos';
 
-export default function BrowsePage() {
+function BrowsePage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [cuisines, setCuisines] = useState<string[]>([]);
   const [query, setQuery] = useState('');
@@ -19,11 +20,13 @@ export default function BrowsePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Links like /restaurants?q=pizza (the "What are you craving?" circles) start with a search.
+  // Links like /restaurants?q=pizza (the craving circles and the navbar menu) set the search,
+  // including when you pick another one while already on this page.
+  const params = useSearchParams();
+  const urlQuery = params.get('q') ?? '';
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get('q');
-    if (q) setQuery(q);
-  }, []);
+    setQuery(urlQuery);
+  }, [urlQuery]);
 
   // Load the cuisine chips once.
   useEffect(() => {
@@ -170,5 +173,14 @@ export default function BrowsePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function RestaurantsPage() {
+  // useSearchParams needs a Suspense boundary or the production build fails.
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-6xl px-4 py-20 text-center text-muted-foreground">Loading…</div>}>
+      <BrowsePage />
+    </Suspense>
   );
 }

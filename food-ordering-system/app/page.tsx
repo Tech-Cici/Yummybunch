@@ -3,7 +3,7 @@ import { ArrowRight, Bike, ChefHat, Heart, Search, ShoppingBag, Store, UtensilsC
 import { Button } from '@/components/ui/button';
 import { API_URL, Restaurant } from '@/lib/api';
 import { RestaurantCard } from '@/components/app/restaurant-card';
-import { foodPhoto, FoodPhoto } from '@/lib/food-photos';
+import { CRAVINGS, cravingHref, foodPhoto } from '@/lib/food-photos';
 
 /**
  * Server-rendered so the catalogue is visible immediately, with no token and no
@@ -20,14 +20,6 @@ async function loadRestaurants(): Promise<Restaurant[]> {
   }
 }
 
-const CRAVINGS: { label: string; photo: FoodPhoto; q: string }[] = [
-  { label: 'Grills & brochettes', photo: 'brochettes', q: 'grill' },
-  { label: 'Stews & curries', photo: 'curry', q: 'stew' },
-  { label: 'Pizza', photo: 'pizza', q: 'pizza' },
-  { label: 'Breakfast', photo: 'pancakes', q: 'breakfast' },
-  { label: 'Fresh bowls', photo: 'bowl', q: 'salad' },
-  { label: 'Sharing plates', photo: 'platter', q: '' },
-];
 
 export default async function HomePage() {
   const restaurants = (await loadRestaurants()).slice(0, 6);
@@ -74,11 +66,11 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- cravings ---------------- */}
-      <section className="mx-auto max-w-6xl px-4 pb-16">
+      <section id="cravings" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-16">
         <h2 className="font-display text-3xl font-semibold">What are you craving?</h2>
         <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-6">
           {CRAVINGS.map(c => (
-            <Link key={c.label} href={c.q ? `/restaurants?q=${encodeURIComponent(c.q)}` : '/restaurants'} className="group flex flex-col items-center gap-3 rounded-3xl p-2 text-center">
+            <Link key={c.label} href={cravingHref(c.q)} className="group flex flex-col items-center gap-3 rounded-3xl p-2 text-center">
               <span className="relative aspect-square w-full overflow-hidden rounded-full border-4 border-card shadow-md shadow-orange-900/10 ring-1 ring-border transition duration-300 group-hover:-translate-y-1 group-hover:ring-primary/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={foodPhoto(c.photo)} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-110" />
@@ -90,7 +82,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- open now ---------------- */}
-      <section className="mx-auto max-w-6xl px-4 pb-20">
+      <section id="restaurants" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-20">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-bold uppercase tracking-widest text-primary">Fresh out of the kitchen</p>
@@ -126,7 +118,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- how it works ---------------- */}
-      <section className="border-y bg-secondary/60">
+      <section id="how-it-works" className="scroll-mt-16 border-y bg-secondary/60">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <p className="text-center text-sm font-bold uppercase tracking-widest text-primary">How it works</p>
           <h2 className="font-display mt-1 text-center text-3xl font-semibold">From craving to first bite</h2>
@@ -150,7 +142,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- for restaurants ---------------- */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
+      <section id="for-restaurants" className="mx-auto max-w-6xl scroll-mt-16 px-4 py-20">
         <div className="relative overflow-hidden rounded-[2rem] bg-[#2b1a12] text-white shadow-xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={foodPhoto('cafe')} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />

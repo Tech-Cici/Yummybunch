@@ -20,15 +20,18 @@ export function SiteFooter() {
           <p className="font-bold text-saffron">Eat</p>
           <ul className="mt-3 space-y-2 text-[#f6e9dc]/80">
             <li><Link href="/restaurants" className="rounded hover:text-white">Restaurants</Link></li>
+            <li><Link href="/#cravings" className="rounded hover:text-white">What are you craving?</Link></li>
+            <li><Link href="/#how-it-works" className="rounded hover:text-white">How it works</Link></li>
             <li><Link href="/orders" className="rounded hover:text-white">My orders</Link></li>
-            <li><Link href="/login" className="rounded hover:text-white">Sign in</Link></li>
           </ul>
         </nav>
         <nav aria-label="For restaurants" className="text-sm">
           <p className="font-bold text-saffron">Cook</p>
           <ul className="mt-3 space-y-2 text-[#f6e9dc]/80">
+            <li><Link href="/#for-restaurants" className="rounded hover:text-white">Why list with us</Link></li>
             <li><Link href="/signup?role=restaurant" className="rounded hover:text-white">List your restaurant</Link></li>
             <li><Link href="/dashboard" className="rounded hover:text-white">Restaurant dashboard</Link></li>
+            <li><Link href="/login" className="rounded hover:text-white">Sign in</Link></li>
           </ul>
         </nav>
       </div>

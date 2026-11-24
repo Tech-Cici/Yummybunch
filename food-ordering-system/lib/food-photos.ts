@@ -15,3 +15,15 @@ export function fallbackFor(seed: string | number) {
   for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   return foodPhoto(FOOD_PHOTOS[h % FOOD_PHOTOS.length]);
 }
+
+/** "What are you craving?" categories: shown on the home page and in the navbar menu. */
+export const CRAVINGS: { label: string; photo: FoodPhoto; q: string }[] = [
+  { label: 'Grills & brochettes', photo: 'brochettes', q: 'grill' },
+  { label: 'Stews & curries', photo: 'curry', q: 'stew' },
+  { label: 'Pizza', photo: 'pizza', q: 'pizza' },
+  { label: 'Breakfast', photo: 'pancakes', q: 'breakfast' },
+  { label: 'Fresh bowls', photo: 'bowl', q: 'salad' },
+  { label: 'Sharing plates', photo: 'platter', q: '' },
+];
+
+export const cravingHref = (q: string) => (q ? `/restaurants?q=${encodeURIComponent(q)}` : '/restaurants');
